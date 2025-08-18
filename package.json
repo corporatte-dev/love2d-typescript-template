@@ -1,6 +1,7 @@
 {
   "scripts": {
     "start": "love game --console",
+    "dev": "rimraf game && npm run build:tstl && npm run build:copy",
     "build": "npm run build:tstl && npm run build:copy",
     "lint": "npm run lint:prettier && npm run lint:eslint",
     "build:tstl": "tstl -p tsconfig.json",
