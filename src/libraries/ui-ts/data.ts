@@ -1,3 +1,5 @@
+import { newTransform, RGB, RGBA } from "love.math";
+
 export class UDim {
 	public readonly Scale: number;
 	public readonly Offset: number;
@@ -30,7 +32,30 @@ export class UDim2 {
 	}
 }
 
-// export const Fonts = {
-//     Silkscreen_Regular: newFont("....res\\fonts\\Silkscreen-Regular.ttf", 10, "normal"),
-//     Silkscreen_Bold: newFont("....res\\fonts\\Silkscreen-Bold.ttf", 10, "normal")
-// }
+export class Color3 {
+	public r: number;
+	public g: number;
+	public b: number;
+
+	constructor(r: number, g: number, b: number) {
+		this.r = r;
+		this.g = g;
+		this.b = b;
+	}
+
+	toRGB(): RGB {
+		return [this.r, this.g, this.b];
+	}
+
+	toRGBA(transparency: number): RGBA {
+		return [this.r, this.g, this.b, transparency];
+	}
+
+	lerp(targetColor: Color3, alpha: number): Color3 {
+		const r = this.r + (targetColor.r - this.r) * alpha;
+		const g = this.g + (targetColor.g - this.g) * alpha;
+		const b = this.b + (targetColor.b - this.b) * alpha;
+
+		return new Color3(r, g, b);		
+	}
+}
