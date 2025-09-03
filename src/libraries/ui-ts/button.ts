@@ -16,6 +16,14 @@ export class UIButton extends UIBase {
         this.isPressed = false;
     }
 
+
+    /**
+     * Returns wether or not the mouse is actively on the button.
+     */
+    getMouseHovering(): boolean {
+        return this.isHover;
+    }
+
     onDraw(): void {
         const [mx, my] = love.mouse.getPosition();
         const [bx, by] = this.getAbsolutePosition();
@@ -26,5 +34,6 @@ export class UIButton extends UIBase {
         } else if (this.isHover) {
             this.isHover = false;
         }
+        super.onDraw();
     }
 }

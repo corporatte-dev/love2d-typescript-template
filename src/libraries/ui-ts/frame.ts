@@ -2,7 +2,6 @@ import { getHeight, getWidth } from 'love.graphics';
 import { colorFromBytes, RGB } from 'love.math';
 import UIBase from './base';
 import { UDim2 } from './data';
-import { UDimToPixels } from './util';
 
 export default class UIFrame extends UIBase {
 	public backgroundTransparency: number = 0;
@@ -20,8 +19,6 @@ export default class UIFrame extends UIBase {
 	}
 
 	onDraw(): void {
-		super.onDraw();
-
 		love.graphics.setColor(this.backgroundColor);
 
 		const positionLimits: [number, number] = [getWidth(), getHeight()];
@@ -38,12 +35,12 @@ export default class UIFrame extends UIBase {
 
 		love.graphics.rectangle(
 			'fill',
-			positionOrigin[0] +
-				UDimToPixels(this.position.X, positionLimits[0]),
-			positionOrigin[1] +
-				UDimToPixels(this.position.Y, positionLimits[1]),
+			positionOrigin[0] + this.position.X.Offset + (this.position.X.Scale * positionLimits[0]),
+			positionOrigin[1] + this.position.Y.Offset, (this.position.Y.Scale *positionLimits[1]),
 			this.getAbsoluteSize()[0],
 			this.getAbsoluteSize()[1]
 		);
+		
+		super.onDraw();
 	}
 }
