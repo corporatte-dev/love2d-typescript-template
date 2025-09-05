@@ -1,9 +1,29 @@
 import { getHeight, getWidth } from 'love.graphics';
 import { OnDraw } from '../../types/system';
 import { UDim2 } from './data';
-import { InterfaceService, UserInterface } from './interface';
 
-export default class UIBase implements OnDraw {
+class InterfaceService implements OnDraw {
+	private static instances: UIBase[] = [];
+
+	static _getInstances() {
+		return InterfaceService.instances;
+	}
+
+	_appendInstance(element: UIBase) {
+		InterfaceService.instances.push(element);
+	}
+
+	_removeInstance(element: UIBase) {
+		const index = InterfaceService.instances.indexOf(element);
+		if (index !== -1) delete InterfaceService.instances[index];
+	}
+
+	onDraw(): void {}
+}
+
+export const UserInterface = new InterfaceService();
+
+export class UIBase implements OnDraw {
 	public size: UDim2;
 	public position: UDim2;
 	public anchorPoint: [number, number];
@@ -11,47 +31,45 @@ export default class UIBase implements OnDraw {
 
 	public parent?: UIBase;
 
-	constructor() {
+	constructor(parent?: UIBase) {
 		this.size = new UDim2(0, 0, 0, 0);
 		this.position = new UDim2(0, 0, 0, 0);
 		this.anchorPoint = [0, 0];
-		if (UserInterface.getRoot()) {
-			this.parent = UserInterface.getRoot();
-			InterfaceService.instances.push(this);
-		}
+		this.parent = parent;
+		//UserInterface._appendInstance(this);
 	}
 
 	/**
 	 * Returns all immediate children of the UI element.
 	 */
-	getChildren(): UIBase[] {
-		const instances = InterfaceService.instances;
-		const bin: UIBase[] = [];
-		// TODO: REPLACE LINEAR SEARCH WITH SOMETHING FASTER
-		instances.forEach(instance => {
-			if (!(instance.parent || instance.parent !== this)) {
-				bin.push(instance);
-			}
-		});
-		return bin;
-	}
+	// getChildren(): UIBase[] {
+	// 	const instances = InterfaceService._getInstances();
+	// 	const bin: UIBase[] = [];
+	// 	// TODO: REPLACE LINEAR SEARCH WITH SOMETHING FASTER
+	// 	instances.forEach(instance => {
+	// 		if (!(instance.parent || instance.parent !== this)) {
+	// 			bin.push(instance);
+	// 		}
+	// 	});
+	// 	return bin;
+	// }
 
 	/**
 	 * A recursive search of descendants related to the UI element.
 	 * @returns Descendants Array
 	 */
-	getDescendants(): UIBase[] {
-		const instances = InterfaceService.instances;
-		const bin: UIBase[] | undefined = this.getChildren();
+	// getDescendants(): UIBase[] {
+	// 	const instances = InterfaceService._getInstances();
+	// 	const bin: UIBase[] | undefined = this.getChildren();
 
-		if (bin.length === 0) return bin;
+	// 	if (bin.length === 0) return bin;
 
-		bin.forEach(instance => {
-			bin.push(...instance.getDescendants());
-		});
+	// 	bin.forEach(instance => {
+	// 		bin.push(...instance.getDescendants());
+	// 	});
 
-		return bin;
-	}
+	// 	return bin;
+	// }
 
 	getAbsoluteSize(): LuaMultiReturn<[number, number]> {
 		return $multi(
@@ -91,10 +109,8 @@ export default class UIBase implements OnDraw {
 
 	onDraw(): void {
 		if (!this.visible) return;
-		if (this.getChildren() !== undefined) {
-			this.getChildren()!.forEach(element => {
-				element.onDraw();
-			});
-		}
+		// this.getChildren().forEach(element => {
+		// 	element.onDraw();
+		// });
 	}
 }

@@ -18,10 +18,10 @@ function createEntityID(): number {
 			// We can't lead with a zero in our index!!!
 			if (i === 0) {
 				const number = math.random(1, 9);
-				ID = `${i}`;
+				ID = `${number}`;
 			} else {
 				const number = math.random(0, 9);
-				ID = `${ID}${i}`;
+				ID = `${ID}${number}`;
 			}
 		}
 	}
