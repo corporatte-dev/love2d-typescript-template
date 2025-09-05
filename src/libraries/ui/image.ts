@@ -13,11 +13,11 @@ export class UIImage extends UIFrame {
 		const [posX, posY] = this.getAbsolutePosition();
 		const [sizeX, sizeY] = this.getAbsoluteSize();
 
+		super.onDraw();
+
 		if (this.imagePath !== '') {
 			const img = love.graphics.newImage(this.imagePath);
-			love.graphics.draw(img, posX, posY, 0, 1, 1, 0, 0, sizeX, sizeY);
+			love.graphics.draw(img, posX, posY, 0, sizeX, sizeY);
 		}
-
-		super.onDraw();
 	}
 }

@@ -1,4 +1,4 @@
-import { newTransform, RGB, RGBA } from "love.math";
+import { RGB, RGBA } from 'love.math';
 
 export class UDim {
 	public readonly Scale: number;
@@ -44,11 +44,15 @@ export class Color3 {
 	}
 
 	toRGB(): RGB {
-		return [this.r, this.g, this.b];
+		return [
+			math.max(0, this.r / 255),
+			math.max(0, this.g / 255),
+			math.max(0, this.b / 255),
+		];
 	}
 
 	toRGBA(transparency: number): RGBA {
-		return [this.r, this.g, this.b, transparency];
+		return [...this.toRGB(), transparency];
 	}
 
 	lerp(targetColor: Color3, alpha: number): Color3 {
@@ -56,6 +60,6 @@ export class Color3 {
 		const g = this.g + (targetColor.g - this.g) * alpha;
 		const b = this.b + (targetColor.b - this.b) * alpha;
 
-		return new Color3(r, g, b);		
+		return new Color3(r, g, b);
 	}
 }

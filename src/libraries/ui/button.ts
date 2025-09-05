@@ -1,3 +1,4 @@
+import { getHeight, getWidth, setColor } from 'love.graphics';
 import { RGBA } from 'love.math';
 import { Signal } from '../signal';
 import { UIFrame } from './frame';
@@ -50,10 +51,6 @@ export class UIButton extends UIFrame {
 		const [bx, by] = this.getAbsolutePosition();
 		const [sx, sy] = this.getAbsoluteSize();
 
-		if (!this.isHover && !this.hasClicked) {
-			this.backgroundColorHolder = this.backgroundColor;
-		}
-
 		const inBounds: boolean =
 			mx > bx && mx < bx + sx && my > by && my < by + sy;
 
@@ -61,58 +58,57 @@ export class UIButton extends UIFrame {
 
 		if (this.isHover && isClicked && !this.hasClicked) {
 			this.hasClicked = true;
-			this.backgroundColor = [
-				this.backgroundColorHolder[0] + 0.2,
-				this.backgroundColorHolder[1] + 0.2,
-				this.backgroundColorHolder[2] + 0.2,
-			];
 			this.mousePressBegan.fire(this);
 		}
 
 		if (!isClicked && this.hasClicked) {
 			this.hasClicked = false;
-			this.backgroundColor[0] = this.backgroundColorHolder[0];
-			this.backgroundColor[1] = this.backgroundColorHolder[1];
-			this.backgroundColor[2] = this.backgroundColorHolder[2];
 			this.mousePressEnded.fire(this);
 		}
 
 		if (inBounds && this.isHover === false && !this.hasClicked) {
 			this.isHover = true;
 			this.mouseHover.fire(this);
-			if (this.autoButtonColor) {
-				this.backgroundColor[0] = math.max(
-					0,
-					this.backgroundColorHolder[0] - 0.15
-				);
-				this.backgroundColor[1] = math.max(
-					0,
-					this.backgroundColorHolder[1] - 0.15
-				);
-				this.backgroundColor[2] = math.max(
-					0,
-					this.backgroundColorHolder[2] - 0.15
-				);
-			}
 		} else if (!inBounds && this.isHover) {
 			this.isHover = false;
 			this.mouseLeave.fire(this);
-			if (this.autoButtonColor) {
-				this.backgroundColor[0] = math.min(
-					1,
-					this.backgroundColorHolder[0] + 0.15
-				);
-				this.backgroundColor[1] = math.min(
-					1,
-					this.backgroundColorHolder[1] + 0.15
-				);
-				this.backgroundColor[2] = math.min(
-					1,
-					this.backgroundColorHolder[2] + 0.15
-				);
-			}
 		}
 
 		super.onDraw();
+
+		// We draw the button coloring after the button frame is rendered
+		if (this.autoButtonColor) {
+			if (this.isHover && !this.hasClicked) {
+				setColor(0, 0, 0, 0.15);
+			} else if (!this.isHover) {
+				setColor(0, 0, 0, 0);
+			}
+
+			if (this.hasClicked) {
+				setColor(1, 1, 1, 0.3);
+			}
+
+			const positionLimits: [number, number] = [getWidth(), getHeight()];
+			const positionOrigin: [number, number] = [0, 0];
+
+			if (this.parent) {
+				positionOrigin[0] = bx;
+				positionOrigin[1] = by;
+				positionLimits[0] = positionOrigin[0] + sx;
+				positionLimits[1] = positionOrigin[1] + sy;
+			}
+
+			love.graphics.rectangle(
+				'fill',
+				positionOrigin[0] +
+					this.position.X.Offset +
+					this.position.X.Scale * positionLimits[0],
+				positionOrigin[1] +
+					this.position.Y.Offset +
+					this.position.Y.Scale * positionLimits[1],
+				sx,
+				sy
+			);
+		}
 	}
 }
