@@ -1,9 +1,11 @@
-export interface OnLoad {
+export interface System {
     onLoad(): void;
+    onUpdate(dt: number): void;
 }
 
-export interface OnUpdate {
-    onUpdate(dt: number): void;
+export interface Renderer {
+    onLoad(): void;
+    onDraw(): void;
 }
 
 export interface OnDraw {
