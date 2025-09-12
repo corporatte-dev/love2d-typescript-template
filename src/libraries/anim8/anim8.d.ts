@@ -17,7 +17,16 @@ export function newAnimation(
 ): Animation;
 
 export interface Grid {
-    getFrames(): Quad[];
+    frameWidth: number;
+    frameHeight: number;
+    imageWidth: number;
+    imageHeight: number;
+    left: number;
+    top: number;
+    border: number;
+    width: number;
+    height: number;
+    getFrames(rows: string | number, columns: string | number): Quad[];
 }
 
 export interface Animation {
@@ -31,7 +40,7 @@ export interface Animation {
     pauseAtStart(): void;
     resume(): void;
     draw(
-        image: Quad,
+        image: Image,
         x: number,
         y: number,
         r?: number,
