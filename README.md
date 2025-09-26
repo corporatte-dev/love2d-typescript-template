@@ -40,3 +40,9 @@ love.filesystem.read("res/input.txt");
   - [Compiler Directives](https://github.com/TypeScriptToLua/TypeScriptToLua/wiki/Compiler-Directives)
 - [LÖVE 2D Wiki](https://love2d.org/wiki/Main_Page)
 - [LÖVE 2D - Getting Started](https://love2d.org/wiki/Getting_Started)
+
+### What differs from the original Love2D Typescript Template?
+- Typings for the sprite animation library: anim8 (https://github.com/kikito/anim8)
+- Typings for the camera module in hump (https://github.com/vrld/hump)
+- Example shader code for those wanting to learn with OpenGL
+- Very simple, rudimentary User Interface library (WIP)
